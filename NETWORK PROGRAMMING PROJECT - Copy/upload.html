@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Assistant</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .container {
+    max-width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+  input[type="text"] {
+    width: calc(100% - 40px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Voice Assistant</h1>
+  <input type="text" id="query" placeholder="Type your query...">
+  <button onclick="startListening()">Start Listening</button>
+  <p id="response"></p>
+</div>
+
+<script>
+  // Initialize SpeechRecognition object
+  const recognition = new webkitSpeechRecognition();
+
+  recognition.lang = 'en-US'; // Set language
+  recognition.continuous = false; // Process audio continuously
+  recognition.interimResults = false; // Don't return interim results
+
+  // Function to handle recognition start
+  recognition.onstart = function() {
+    console.log('Voice recognition started...');
+    document.getElementById('response').textContent = 'Listening...';
+  };
+
+  // Function to handle recognition end
+  recognition.onend = function() {
+    console.log('Voice recognition ended...');
+  };
+
+  // Function to handle recognition result
+  recognition.onresult = function(event) {
+    const result = event.results[0][0];
+    const transcript = result.transcript;
+    const confidence = result.confidence;
+    console.log('Recognition result:', transcript, 'Confidence:', confidence);
+    document.getElementById('response').textContent = 'You said: ' + transcript + '. Opening Google search.';
+    window.open(`https://www.google.com/search?q=${encodeURIComponent(transcript)}`);
+  };
+
+  // Function to start listening
+  function startListening() {
+    recognition.start();
+  }
+</script>
+
+</body>
+</html>
